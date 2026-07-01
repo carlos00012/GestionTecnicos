@@ -15,13 +15,13 @@
     <table>
         <tr>
             <td style="text-align: left ; width: 800px;">
-                <img style="height: 80px; " src="https://www.utc.edu.ec/Portals/0/BELEN/NUEVAimagen/universidad_def.png?ver=2019-05-08-101730-527" alt="Logo UTC">
+                <img style="height: 80px; " src="{% static 'assets/img/logoutc.png' %}" alt="Logo UTC">
             </td>
             <td>
                 <div id="qrcode"></div>
             </td>
             <td style="text-align: right; width: 800px;">
-                <img style="height: 80px; " src="https://scontent.fuio13-1.fna.fbcdn.net/v/t39.30808-6/245921403_111471174655359_3752814047428246322_n.jpg?stp=dst-jpg_tt6&cstp=mx1499x1499&ctp=s1499x1499&_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=1cabvOG81MUQ7kNvwFTOBdJ&_nc_oc=AdpiCdHlm5J3FR37o4zhHfNLzFKO7klH445ySx7Zy0XELwvsSO_aKk8oC9cxIA6WzIQ&_nc_zt=23&_nc_ht=scontent.fuio13-1.fna&_nc_gid=oNu2Zl_lwiM-rVasM62FJA&_nc_ss=7b289&oh=00_Af9V61_52HA5DorKKzo_R-DswAr1q6e6VyqAywOE7MsnQg&oe=6A4328CA" alt="Logo Adicional">
+                <img style="height: 80px; " src="{% static 'assets/img/logosistemas.jpeg' %}" alt="Logo Adicional">
             </td>
         </tr>
     </table>
@@ -85,14 +85,20 @@
 
 <center>
     <br>
-    <button class="btn btn-dark" onclick="window.print();">Imprimir Reporte</button>
+    <button class="btn btn-dark no-imprimir" onclick="window.print();">
+        Imprimir Reporte
+    </button>
 </center>
 <br>
 
-<style media="print">
-    button {
-        display: none;
+<style>
+@media print {
+
+    .no-imprimir {
+        display:none !important;
     }
+
+}
 </style>
 
 <script>
