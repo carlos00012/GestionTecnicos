@@ -1,0 +1,105 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <br>
+                <h1><b>Registrar Nuevo Tecnico</b></h1>
+                <hr>
+                <form enctype="multipart/form-data" id="form_nuevo_tecnico" action="/guardarTecnico/" method="post">
+                    {% csrf_token %}
+                    <b>Nombre: </b><br>
+                    <input required minlength="3" maxlength="20" pattern="[A-Za-z]+"  
+                        placeholder="Ingrese el nombre del Tecnico" type="text" class="form-control" name="nombre">
+                    <br>
+                    <b>Apellido: </b><br>
+                    <input required minlength="3" maxlength="20" pattern="[A-Za-z]+"
+                        placeholder="Ingrese el apellido del Tecnico" type="text" class="form-control" name="apellido">
+                    <br>
+                    <b>Telefono: </b><br>
+                    <input required minlength="7" maxlength="10" pattern="[0-9]+"
+                        placeholder="Ingrese el telefono del Tecnico" type="text" class="form-control" name="telefono">
+                    <br>
+                    <b>Especialidad: </b><br>
+                    <input required minlength="3" maxlength="20" pattern="[A-Za-z]+"  
+                        placeholder="Ingrese la especialidad del Tecnico" type="text" class="form-control" name="especialidad">
+                    <br>
+
+                    <b>Fotografia:</b>
+                    <input required type="file" name="foto" id="foto">
+
+                    <br>
+                    <br>
+                    <button class="btn btn-success" type="submit"> <i class="bi bi-save"></i>  Guardar</button>
+                         o   <a href="/listadoTecnicos" class="btn btn-danger"><i class="bi bi-x-circle"></i> Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#form_nuevo_tecnico").validate({
+                rules: {
+                    nombre: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    },
+                    apellido: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    },
+                    telefono: {
+                        required: true,
+                        minlength: 7,
+                        maxlength: 10
+                    },
+                    especialidad: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    }
+                },
+                messages: {
+                    nombre: {
+                        required: "Por favor, ingrese el nombre del técnico.",
+                        minlength: "El nombre debe tener al menos 3 caracteres.",
+                        maxlength: "El nombre no puede exceder los 20 caracteres."
+                    },
+                    apellido: {
+                        required: "Por favor, ingrese el apellido del técnico.",
+                        minlength: "El apellido debe tener al menos 3 caracteres.",
+                        maxlength: "El apellido no puede exceder los 20 caracteres."
+                    },
+                    telefono: {
+                        required: "Por favor, ingrese el teléfono.",
+                        minlength: "El teléfono debe tener al menos 7 dígitos.",
+                        maxlength: "El teléfono no puede exceder los 10 dígitos."
+                    },
+                    especialidad: {
+                        required: "Por favor, ingrese la especialidad.",
+                        minlength: "La especialidad debe tener al menos 3 caracteres.",
+                        maxlength: "La especialidad no puede exceder los 20 caracteres."
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $("#foto").fileinput({
+            language: "es",
+            allowedFileExtensions: ["png", "jpg", "jpeg"], // CORREGIDO: Extensiones separadas correctamente en un Array
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false,
+        });
+        
+        // Con jquery podemos ocultar el boton de subir archivo
+        $(".fileinput-upload").hide();
+    </script>
+
+{% endblock %}

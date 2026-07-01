@@ -1,0 +1,123 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <br>
+                <h1><b>Actualizar Tecnico</b></h1>
+                <hr>
+                <form enctype="multipart/form-data" id="form_actualizar_tecnico" action="/procesarActualizacionTecnico/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ tecnico.id }}">
+                    
+                    <b>Nombre:</b> <br>
+                    <input required pattern="[a-zA-Z\s]+" minlength="3" maxlength="20" value="{{ tecnico.nombre }}" placeholder="Ingrese el nombre del Tecnico" class="form-control" type="text" name="nombre">
+                    <br>
+                    
+                    <b>Apellido:</b> <br>
+                    <input required pattern="[a-zA-Z\s]+" minlength="3" maxlength="20" value="{{ tecnico.apellido }}" placeholder="Ingrese el apellido del Tecnico" class="form-control" type="text" name="apellido">
+                    <br>
+                    
+                    <b>Teléfono:</b> <br>
+                    <input required pattern="[0-9]+" minlength="7" maxlength="10" value="{{ tecnico.telefono }}" placeholder="Ingrese el teléfono del Tecnico" class="form-control" type="text" name="telefono">
+                    <br>
+                    
+                    <b>Especialidad:</b> <br>
+                    <input required pattern="[a-zA-Z\s]+" minlength="3" maxlength="20" value="{{ tecnico.especialidad }}" placeholder="Ingrese la especialidad del Tecnico" class="form-control" type="text" name="especialidad">
+                    <br>
+                    
+                    <b>Cambiar foto:</b> <br>
+                    <input type="file" name="foto" id="foto" accept="image/*">
+                    <br>
+                    <small></small>
+                    <br>
+                    <br>
+
+                    <button class="btn btn-success" type="submit">
+                        <i class="bi bi-save"></i>
+                        Actualizar
+                    </button>
+                    <a href="/listadoTecnicos/" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i>
+                        Cancelar
+                    </a>
+                </form>
+
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#form_actualizar_tecnico").validate({
+                rules: {
+                    nombre: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    },
+                    apellido: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    },
+                    telefono: {
+                        required: true,
+                        minlength: 7,
+                        maxlength: 10
+                    },
+                    especialidad: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    }
+                },
+                messages: {
+                    nombre: {
+                        required: "Por favor, ingrese el nombre del técnico.",
+                        minlength: "El nombre debe tener al menos 3 caracteres.",
+                        maxlength: "El nombre no puede exceder los 20 caracteres."
+                    },
+                    apellido: {
+                        required: "Por favor, ingrese el apellido del técnico.",
+                        minlength: "El apellido debe tener al menos 3 caracteres.",
+                        maxlength: "El apellido no puede exceder los 20 caracteres."
+                    },
+                    telefono: {
+                        required: "Por favor, ingrese el teléfono.",
+                        minlength: "El teléfono debe tener al menos 7 dígitos.",
+                        maxlength: "El teléfono no puede exceder los 10 dígitos."
+                    },
+                    especialidad: {
+                        required: "Por favor, ingrese la especialidad.",
+                        minlength: "La especialidad debe tener al menos 3 caracteres.",
+                        maxlength: "La especialidad no puede exceder los 20 caracteres."
+                    }
+                }
+            });
+        });
+    </script>
+
+        <script>
+        $("#foto").fileinput({
+            language: "es",
+            allowedFileExtensions: ["png|jpg|jpeg"],
+            showCaption: false,
+            dropZoneEnabled: true,
+            showClose: false,
+
+            initialPreview: [
+            "{{ tecnicos.foto.url }}"
+            ],
+            initialPreviewAsData: true,
+            initialPreviewFileType: 'image'
+
+        });
+        //con jquery podemos ocultar el boton de subir archivo
+        $(".fileinput-upload").hide();
+        //con jquery ocultamos el boton de eliminar que no hacia nada dentro de la imagen
+        $(".kv-file-remove").hide();
+    </script>
+{% endblock %}

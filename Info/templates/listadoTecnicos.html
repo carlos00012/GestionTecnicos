@@ -1,0 +1,101 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+{% load static %}
+
+    <center>
+        <br>
+        <h1><b>Tecnicos Registrados</b>            
+            <a href="/nuevoTecnico/" class="btn btn-info"> 
+                <i class="bi bi-plus-circle"></i>
+                Nuevo Técnico
+            </a>     
+            <a href="/reporteTecnicos/" 
+            onclick="window.open(this.href,'Reporte Técnicos','width=800,height=950,resizable=yes,scrollbars=yes'); return false;"
+            class="btn btn-dark"><i class="bi bi-eye"></i> Imprimir Reporte</a>   
+        </h1>
+        <hr>
+    </center>
+    <br>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table id="tbl_tecnicos" class="table table-hover table-striped
+                            table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NOMBRE</th>
+                        <th>APELLIDO</th>
+                        <th>TELEFONO</th>
+                        <th>ESPECIALIDAD</th>
+                        <th>FOTO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tecnicoTemporal in tecnicos %}
+                        <tr>
+                            <td>{{tecnicoTemporal.id}}</td>
+                            <td>{{tecnicoTemporal.nombre}}</td>
+                            <td>{{tecnicoTemporal.apellido}}</td>
+                            <td>{{tecnicoTemporal.telefono}}</td>
+                            <td>{{tecnicoTemporal.especialidad}}</td>
+                            <td class="text-center">
+                                {%  if tecnicoTemporal.foto %}
+                                 <a href="{{ tecnicoTemporal.foto.url }}" target="_blank" >
+                                    <img src="{{ tecnicoTemporal.foto.url }}"
+                                    style="height:40px; width:40px; border-radius:100px;"> 
+                                 </a>                                      
+                                {% else %}
+                                    <b>N/A</b>
+                                {% endif %}
+                            </td>
+                            <td>
+
+                            {% if user.perfil.rol == "admin" %}
+
+                            <a href="/editarTecnico/{{tecnicoTemporal.id}}" 
+                            class="btn btn-outline-warning" 
+                            title="Editar Técnico">
+
+                            <i class="bi bi-pencil"></i>
+
+                            </a>
+
+
+                            <a href="/eliminarTecnico/{{tecnicoTemporal.id}}"
+                            title="Eliminar Técnico"
+                            onclick="return confirm('¿Está seguro de eliminar?')"
+                            class="btn btn-outline-danger">
+
+                            <i class="bi bi-trash"></i>
+                            </a>
+                            {% endif %}
+                            </a>
+
+                                 {%  if tecnicoTemporal.foto %}                                     
+                                    <a title="Ver Imagen" class="btn btn-outline-info" href="{{ tecnicoTemporal.foto.url }}" target="_blank" >
+                                        <i class="bi bi-image"></i>
+                                    </a>    
+                                                   
+                                     <a title="Descargar Imagen"  class="btn btn-outline-dark" href="{{ tecnicoTemporal.foto.url }}" download >
+                                        <i class="bi bi-download"></i>
+                                     </a>                             
+ 
+                                {% else %}
+                                     <a title="No hay imagen disponible" class=" disabled btn btn-outline-info" href="javascript:void(0)" >
+                                        <i class="bi bi-image"></i>
+                                    </a>    
+                                                   
+                                     <a  title="No hay imagen disponible" class=" disabled btn btn-outline-dark" href="javascript:void(0)">
+                                        <i class="bi bi-download"></i>
+                                     </a>  
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Técnicos</title>
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+    
+    <script src="{% static 'assets/vendor/jquery/qrcode.min.js' %}"></script>
+</head>
+<body>
+
+<br>
+<center>
+    <table>
+        <tr>
+            <td style="text-align: left ; width: 800px;">
+                <img style="height: 80px; " src="https://www.utc.edu.ec/Portals/0/BELEN/NUEVAimagen/universidad_def.png?ver=2019-05-08-101730-527" alt="Logo UTC">
+            </td>
+            <td>
+                <div id="qrcode"></div>
+            </td>
+            <td style="text-align: right; width: 800px;">
+                <img style="height: 80px; " src="https://scontent.fuio13-1.fna.fbcdn.net/v/t39.30808-6/245921403_111471174655359_3752814047428246322_n.jpg?stp=dst-jpg_tt6&cstp=mx1499x1499&ctp=s1499x1499&_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=1cabvOG81MUQ7kNvwFTOBdJ&_nc_oc=AdpiCdHlm5J3FR37o4zhHfNLzFKO7klH445ySx7Zy0XELwvsSO_aKk8oC9cxIA6WzIQ&_nc_zt=23&_nc_ht=scontent.fuio13-1.fna&_nc_gid=oNu2Zl_lwiM-rVasM62FJA&_nc_ss=7b289&oh=00_Af9V61_52HA5DorKKzo_R-DswAr1q6e6VyqAywOE7MsnQg&oe=6A4328CA" alt="Logo Adicional">
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    <h1><b>LISTADO DE TÉCNICOS REGISTRADOS</b></h1>
+</center>
+<br>
+
+{% for t in misTecnicos %}
+        <center>
+        <div style="width: 100%; display: inline-block; margin-bottom: 30px;">      
+            <div style="width:200px; float:left; padding-left:20px !important;">
+                {% if t.foto %}                    
+                    <img src="{{ t.foto.url }}" style="height:150px; width:150px; margin-right:-1px; object-fit: cover;">                                                        
+                {% else %}
+                    <img src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg" style="height:200px; width:200px; object-fit: cover;"> 
+                {% endif %}  
+            </div>
+
+            <div style="width:200px; float:left; padding-left:20px !important;">
+                <div id="qrcode{{t.id}}"></div>
+                <script type="text/javascript">
+                    // Espera a que las imágenes carguen para no romper la generación del QR
+                    window.addEventListener('load', function() {
+                        var texto = "TÉCNICO #00{{t.id}} \n NOMBRE: {{ t.nombre|escapejs }} {{ t.apellido|escapejs }} \n TELÉFONO: {{ t.telefono }} \n ESPECIALIDAD: {{ t.especialidad|escapejs }}";
+                      
+                        new QRCode(document.getElementById("qrcode{{t.id}}"), {
+                            text: texto,
+                            width: 128,
+                            height: 128,
+                            colorDark : "#000000",
+                            colorLight : "#ffffff"
+                        });
+                    });
+                </script>               
+            </div>
+
+            <div style="width:50%; float:left; padding-left:20px; text-align: left;">
+                    <hr style="margin: 5px 0;">
+                    <h5 style="text-transform: uppercase;"><b>TÉCNICO #00{{t.id}}</b></h5>
+                    <hr style="margin: 5px 0;">
+                    <h5 style="text-transform: uppercase;"><b>{{t.nombre}} {{t.apellido}}</b></h5>
+                    <hr style="margin: 5px 0;">
+                    <h5><b>TELÉFONO: </b> {{t.telefono}}</h5>
+                    <hr style="margin: 5px 0;">
+                    <h5 style="text-transform: uppercase;"><b>ESPECIALIDAD: </b> {{t.especialidad}}</h5>
+            </div>
+        </div>
+        </center>
+        <br> 
+{% endfor %}
+
+<center>
+    <br><br>
+    ......................................... <br>
+    <b>FIRMA DE RESPONSABILIDAD</b> <br>
+    <b>C.I.:___________________</b> <br>
+    <b>TALENTO HUMANO / ENCARGADO</b>
+</center>
+
+<center>
+    <br>
+    <button class="btn btn-dark" onclick="window.print();">Imprimir Reporte</button>
+</center>
+<br>
+
+<style media="print">
+    button {
+        display: none;
+    }
+</style>
+
+<script>
+    // Ejecuta la impresión automática de la ventana emergente
+    window.print();
+</script>
+
+<script type="text/javascript">
+    // Genera el QR general de la URL del reporte
+    var urlActual = window.location.href;
+    
+    new QRCode(document.getElementById("qrcode"), {
+        text: urlActual,
+        width: 128,
+        height: 128,
+        colorDark : "#0000ff", // Código QR general en color azul
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+</script>
+
+</body>
+</html>

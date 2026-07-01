@@ -1,0 +1,65 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+{% load static %}
+
+    <center>
+        <br>
+        <h1><b>Cursos Registrados</b>            
+            <a href="/nuevoCurso/" class="btn btn-info"> 
+                <i class="bi bi-plus-circle"></i>
+                Nuevo Curso
+            </a>     
+            <a href="/reporteCursos/" 
+            onclick="window.open(this.href,'Reporte Cursos','width=800,height=950,resizable=yes,scrollbars=yes'); return false;"
+            class="btn btn-dark"><i class="bi bi-eye"></i> Imprimir Reporte</a>   
+        </h1>
+        <hr>
+    </center>
+    <br>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table id="tbl_cursos" class="table table-hover table-striped
+                            table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NOMBRE</th>
+                        <th>DESCRIPCION</th>
+                        <th>FECHA INICIO</th>
+                        <th>FECHA FIN</th>
+                        <th>TECNICO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cursoTemporal in cursos %}
+                        <tr>
+                            <td>{{cursoTemporal.id}}</td>
+                            <td>{{cursoTemporal.nombre}}</td>
+                            <td>{{cursoTemporal.descripcion}}</td>
+                            <td>{{cursoTemporal.fecha_inicio}}</td>
+                            <td>{{cursoTemporal.fecha_fin}}</td>
+                            <td>{{cursoTemporal.tecnico.nombre}}</td>
+                            <td>
+                                {% if user.perfil.rol == "admin" %}
+                                <a href="/editarCurso/{{cursoTemporal.id}}" class="btn btn-outline-warning" title="Editar Curso">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="/eliminarCurso/{{cursoTemporal.id}}"
+                                title="Eliminar Curso"
+                                 onclick="return confirm('¿Está seguro de eliminar?')"
+                                 class="btn btn-outline-danger">
+                                     <i class="bi bi-trash"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

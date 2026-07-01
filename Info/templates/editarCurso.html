@@ -1,0 +1,105 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <br>
+                <h1><b>Actualizar Curso</b></h1>
+                <hr>
+                <form id="form_actualizar_curso" action="/procesarActualizacionCurso/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ curso.id }}">
+                    
+                    <b>Nombre:</b> <br>
+                    <input required minlength="3" maxlength="20" value="{{ curso.nombre }}" placeholder="Ingrese el nombre del Curso" class="form-control" type="text" name="nombre">
+                    <br>
+                    
+                    <b>Descripción:</b> <br>
+                    <input required minlength="3" maxlength="100" value="{{ curso.descripcion }}" placeholder="Ingrese la descripción del Curso" class="form-control" type="text" name="descripcion">
+                    <br>
+                    
+                    <b>Fecha de Inicio:</b> <br>
+                    <input required value="{{ curso.fecha_inicio|date:'Y-m-d' }}" class="form-control" type="date" name="fecha_inicio">
+                    <br>
+                    
+                    <b>Fecha de Fin:</b> <br>
+                    <input required value="{{ curso.fecha_fin|date:'Y-m-d' }}" class="form-control" type="date" name="fecha_fin">
+                    <br>
+                    
+                    <b>Técnico Responsable:</b> <br>
+                    <select required class="form-control" name="tecnico_id">
+                        <option value="">Seleccione un técnico</option>
+                        {% for tecnico in tecnicos %}
+                            <option value="{{ tecnico.id }}" {% if tecnico.id == curso.tecnico.id %} selected {% endif %}>
+                                {{ tecnico.nombre }} {{ tecnico.apellido }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+
+                    <button class="btn btn-success" type="submit">
+                        <i class="bi bi-save"></i>
+                        Actualizar
+                    </button>
+                    <a href="/listadoCursos/" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i>
+                        Cancelar
+                    </a>
+                </form>
+
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#form_actualizar_curso").validate({
+                rules: {
+                    nombre: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 20
+                    },
+                    descripcion: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 100
+                    },
+                    fecha_inicio: {
+                        required: true
+                    },
+                    fecha_fin: {
+                        required: true
+                    },
+                    tecnico_id: {
+                        required: true
+                    }
+                },
+                messages: {
+                    nombre: {
+                        required: "Por favor, ingrese el nombre del curso.",
+                        minlength: "El nombre debe tener al menos 3 caracteres.",
+                        maxlength: "El nombre no puede exceder los 20 caracteres."
+                    },
+                    descripcion: {
+                        required: "Por favor, ingrese la descripción del curso.",
+                        minlength: "La descripción debe tener al menos 3 caracteres.",
+                        maxlength: "La descripción no puede exceder los 100 caracteres."
+                    },
+                    fecha_inicio: {
+                        required: "Por favor, ingrese la fecha de inicio."
+                    },
+                    fecha_fin: {
+                        required: "Por favor, ingrese la fecha de fin."
+                    },
+                    tecnico_id: {
+                        required: "Por favor, seleccione un técnico."
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
