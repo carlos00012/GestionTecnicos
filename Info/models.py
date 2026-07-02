@@ -39,3 +39,33 @@ class Perfil(models.Model):
 
     def __str__(self):
         return self.usuario.username
+
+# ------------------ CERTIFICADOS ------------------
+class Certificado(models.Model):
+
+    ESTADOS = (
+        ('Aprobado', 'Aprobado'),
+        ('Reprobado', 'Reprobado'),
+    )
+
+    id = models.AutoField(primary_key=True)
+
+    tecnico = models.ForeignKey(
+        Tecnico,
+        on_delete=models.CASCADE
+    )
+
+    curso = models.ForeignKey(
+        Cursos,
+        on_delete=models.CASCADE
+    )
+
+    aprobacion = models.CharField(
+        max_length=15,
+        choices=ESTADOS
+    )
+
+    fecha_emision = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.tecnico.nombre} {self.tecnico.apellido} - {self.curso.nombre}"
