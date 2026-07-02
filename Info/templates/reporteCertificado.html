@@ -6,6 +6,8 @@
     <title>Certificado #{{ certificado.id }}</title>
 
     <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery/qrcode.min.js' %}"></script>
 
     <style>
         html, body {
@@ -158,7 +160,6 @@
     </button>
 </div>
 
-<script src="{% static 'assets/vendor/jquery/qrcode.min.js' %}"></script>
 
 <script>
     try {

@@ -3,116 +3,195 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Cursos</title>
+    <title>Certificado #{{ certificado.id }}</title>
+
     <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
     
+    <!-- Cargamos la librería del QR justo aquí en la cabecera como en tu ejemplo -->
     <script src="{% static 'assets/vendor/jquery/qrcode.min.js' %}"></script>
+
+    <style>
+        html, body {
+            background: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .certificado {
+            width: 95%;
+            max-width: 1100px;
+            height: 580px; 
+            border: 12px solid #b8860b;
+            padding: 20px 40px;
+            margin: 10px auto;
+            box-sizing: border-box;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .logo {
+            height: 70px;
+            max-width: 140px;
+            object-fit: contain;
+        }
+        .foto {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #999;
+            object-fit: cover;
+            margin: 5px 0;
+        }
+        .titulo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1d3557;
+            margin: 0;
+        }
+        .nombre {
+            font-size: 30px;
+            font-weight: bold;
+            color: #0d6efd;
+            margin: 5px 0;
+        }
+        .texto {
+            font-size: 16px;
+            color: #333;
+            margin: 2px 0;
+        }
+        .curso-titulo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1d3557;
+            margin: 5px 0;
+        }
+        .firma {
+            margin-top: 20px;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+            .certificado {
+                border: 12px solid #b8860b !important;
+                page-break-inside: avoid;
+            }
+        }
+
+        @page {
+            size: landscape !important;
+            margin: 0.3cm;
+        }
+    </style>
 </head>
 <body>
 
-<br>
-<center>
-    <table>
-        <tr>
-            <td style="text-align: left ; width: 800px;">
-                <img style="height: 80px; " src="https://www.utc.edu.ec/Portals/0/BELEN/NUEVAimagen/universidad_def.png?ver=2019-05-08-101730-527" alt="Logo UTC">
-            </td>
-            <td>
-                <div id="qrcode"></div>
-            </td>
-            <td style="text-align: right; width: 800px;">
-                <img style="height: 80px; " src="https://scontent.fuio13-1.fna.fbcdn.net/v/t39.30808-6/245921403_111471174655359_3752814047428246322_n.jpg?stp=dst-jpg_tt6&cstp=mx1499x1499&ctp=s1499x1499&_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=1cabvOG81MUQ7kNvwFTOBdJ&_nc_oc=AdpiCdHlm5J3FR37o4zhHfNLzFKO7klH445ySx7Zy0XELwvsSO_aKk8oC9cxIA6WzIQ&_nc_zt=23&_nc_ht=scontent.fuio13-1.fna&_nc_gid=oNu2Zl_lwiM-rVasM62FJA&_nc_ss=7b289&oh=00_Af9V61_52HA5DorKKzo_R-DswAr1q6e6VyqAywOE7MsnQg&oe=6A4328CA" alt="Logo Adicional">
-            </td>
-        </tr>
-    </table>
+<div class="container-fluid">
+    <div class="certificado">
+        
+        <!-- ENCABEZADO -->
+        <table width="100%">
+            <tr>
+                <td width="25%">
+                    <img src="{% static 'assets/img/logoutc.png' %}" class="logo">
+                </td>
+                <td align="center" width="50%">
+                    <!-- Usamos id="qrcode" fijo y simple, idéntico al de tu ejemplo -->
+                    <div id="qrcode" style="display: inline-block;"></div>
+                </td>
+                <td align="right" width="25%">
+                    <img src="{% static 'assets/img/logosistemas.jpeg' %}" class="logo">
+                </td>
+            </tr>
+        </table>
 
-    <br>
-    <h1><b>LISTADO DE CURSOS REGISTRADOS</b></h1>
-</center>
-<br>
-
-{% for c in misCursos %}
+        <!-- CUERPO CENTRAL -->
         <center>
-        <div style="width: 100%; display: inline-block; margin-bottom: 30px;">      
-            <div style="width:200px; float:left; padding-left:20px !important;">
-                {% if c.tecnico.foto %}                    
-                    <img src="{{ c.tecnico.foto.url }}" style="height:150px; width:150px; margin-right:-1px; object-fit: cover;">                                                        
-                {% else %}
-                    <img src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg" style="height:200px; width:200px; object-fit: cover;"> 
-                {% endif %}  
+            <div class="titulo">CERTIFICADO DE APROBACIÓN</div>
+            <hr style="border: 2px solid #b8860b; width: 60%; margin: 5px 0;">
+
+            {% if certificado.tecnico.foto %}
+                <img src="{{ certificado.tecnico.foto.url }}" class="foto">
+            {% endif %}
+            
+            <div class="texto">Se certifica que</div>
+            <div class="nombre">{{ certificado.tecnico.nombre }} {{ certificado.tecnico.apellido }}</div>
+            <div class="texto">ha participado satisfactoriamente en el curso</div>
+            <div class="curso-titulo">{{ certificado.curso.nombre }}</div>
+            
+            <div class="texto">
+                Realizado desde <b>{{ certificado.curso.fecha_inicio }}</b> hasta <b>{{ certificado.curso.fecha_fin }}</b>
             </div>
 
-            <div style="width:200px; float:left; padding-left:20px !important;">
-                <div id="qrcode{{c.id}}"></div>
-                <script type="text/javascript">
-                    window.addEventListener('load', function() {
-                        var texto = "CURSO #00{{c.id}} \n NOMBRE: {{ c.nombre|escapejs }} \n FECHA INICIO: {{ c.fecha_inicio }} \n TÉCNICO: {{ c.tecnico.nombre|escapejs }} {{ c.tecnico.apellido|escapejs }}";
-                      
-                        new QRCode(document.getElementById("qrcode{{c.id}}"), {
-                            text: texto,
-                            width: 128,
-                            height: 128,
-                            colorDark : "#000000",
-                            colorLight : "#ffffff"
-                        });
-                    });
-                </script>               
-            </div>
-
-            <div style="width:50%; float:left; padding-left:20px; text-align: left;">
-                    <hr style="margin: 5px 0;">
-                    <h5 style="text-transform: uppercase;"><b>CURSO #00{{c.id}}</b></h5>
-                    <hr style="margin: 5px 0;">
-                    <h5 style="text-transform: uppercase;"><b>{{c.nombre}}</b></h5>
-                    <hr style="margin: 5px 0;">
-                    <h5><b>DESCRIPCIÓN: </b> {{c.descripcion}}</h5>
-                    <hr style="margin: 5px 0;">
-                    <h5><b>FECHAS: </b> DESDE {{c.fecha_inicio}} HASTA {{c.fecha_fin}}</h5>
-                    <hr style="margin: 5px 0;">
-                    <h5 style="text-transform: uppercase;"><b>TÉCNICO RESPONSABLE: </b> {{c.tecnico.nombre}} {{c.tecnico.apellido}}</h5>
-            </div>
-        </div>
+            {% if certificado.aprobacion == "Aprobado" %}
+                <h2 class="fw-bold" style="color:green; margin: 5px 0;">APROBADO</h2>
+            {% else %}
+                <h2 class="fw-bold" style="color:red; margin: 5px 0;">REPROBADO</h2>
+            {% endif %}
         </center>
-        <br> 
-{% endfor %}
 
-<center>
-    <br><br>
-    ......................................... <br>
-    <b>FIRMA DE RESPONSABILIDAD</b> <br>
-    <b>C.I.:___________________</b> <br>
-    <b>COORDINADOR / ENCARGADO</b>
-</center>
+        <!-- SECCIÓN FIRMAS -->
+        <div class="firma">
+            <table width="100%">
+                <tr>
+                    <td align="center" width="50%" style="font-size: 15px;">
+                        _________________________<br><b>Coordinador</b>
+                    </td>
+                    <td align="center" width="50%" style="font-size: 15px;">
+                        _________________________<br><b>Director</b>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 
-<center>
-    <br>
-    <button class="btn btn-dark" onclick="window.print();">Imprimir Reporte</button>
-</center>
-<br>
+<div class="text-center my-2 no-print">
+    <button class="btn btn-dark" onclick="window.print()">
+        Imprimir Certificado
+    </button>
+</div>
 
-<style media="print">
-    button {
-        display: none;
-    }
-</style>
-
-<script>
-    // Ejecuta la impresión automática de la ventana emergente
-    window.print();
-</script>
-
+<!-- LÓGICA DE GENERACIÓN DIRECTA CON PAUSA DE DIAGNÓSTICO -->
 <script type="text/javascript">
-    // Genera el QR general de la URL del reporte
-    var urlActual = window.location.href;
-    
-    new QRCode(document.getElementById("qrcode"), {
-        text: urlActual,
-        width: 128,
-        height: 128,
-        colorDark : "#00a000", 
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-    });
+    try {
+        var elementoQr = document.getElementById("qrcode");
+        
+        if (elementoQr) {
+            // Generamos el texto idéntico a tu ejemplo
+            var textoCertificado = "Certificado #00{{ certificado.id }}\nTÉCNICO: {{ certificado.tecnico.nombre|escapejs }} {{ certificado.tecnico.apellido|escapejs }}\nCURSO: {{ certificado.curso.nombre|escapejs }}";
+            
+            // Forzamos la creación del QR
+            new QRCode(elementoQr, {
+                text: textoCertificado,
+                width: 110,
+                height: 110,
+                colorDark : "#000000",
+                colorLight : "#ffffff"
+            });
+            
+            // PAUSA CRÍTICA: Esto detendrá el navegador. 
+            // Mira la pantalla detrás de la alerta: ¿Se alcanza a ver el código QR dibujado?
+            alert("Verificando QR en el fondo... Dale a Aceptar para abrir la impresión.");
+            
+        } else {
+            alert("Error: No se encontró el contenedor con id='qrcode'");
+        }
+    } catch (error) {
+        // Si la librería falla por completo, esto te dirá exactamente por qué
+        alert("Error crítico de JS: " + error.message);
+    }
+
+    // Finalmente lanzamos la impresión
+    window.print();
 </script>
 
 </body>
