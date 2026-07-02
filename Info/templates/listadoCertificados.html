@@ -1,0 +1,142 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+{% load static %}
+
+<center>
+    <br>
+    <h1>
+        <b>Certificados Registrados</b>
+
+        <a href="/nuevoCertificado/" class="btn btn-info">
+            <i class="bi bi-plus-circle"></i>
+            Nuevo Certificado
+        </a>
+
+    </h1>
+
+    <hr>
+</center>
+
+<br>
+
+<div class="row">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-10">
+
+        <table id="tbl_certificados"
+        class="table table-hover table-striped table-bordered">
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>FOTO</th>
+                    <th>NOMBRE</th>
+                    <th>APELLIDO</th>
+                    <th>CURSO</th>
+                    <th>FECHA INICIO</th>
+                    <th>FECHA FIN</th>
+                    <th>APROBACIÓN</th>
+                    <th>ACCIONES</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for certificado in certificados %}
+
+                <tr>
+
+                    <td>{{ certificado.id }}</td>
+
+                    <td class="text-center">
+
+                        {% if certificado.tecnico.foto %}
+
+                        <a href="{{ certificado.tecnico.foto.url }}" target="_blank">
+                            <img src="{{ certificado.tecnico.foto.url }}"
+                            style="height:50px;width:50px;border-radius:50%;object-fit:cover;">
+                        </a>
+
+                        {% else %}
+
+                        <b>N/A</b>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>{{ certificado.tecnico.nombre }}</td>
+
+                    <td>{{ certificado.tecnico.apellido }}</td>
+
+                    <td>{{ certificado.curso.nombre }}</td>
+
+                    <td>{{ certificado.curso.fecha_inicio }}</td>
+
+                    <td>{{ certificado.curso.fecha_fin }}</td>
+
+                    <td>
+
+                        {% if certificado.aprobacion == "Aprobado" %}
+
+                            <span class="badge bg-success">
+                                {{ certificado.aprobacion }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger">
+                                {{ certificado.aprobacion }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if user.perfil.rol == "admin" %}
+
+                        <a href="/editarCertificado/{{ certificado.id }}"
+                        class="btn btn-outline-warning"
+                        title="Editar">
+
+                            <i class="bi bi-pencil"></i>
+
+                        </a>
+
+                        <a href="/eliminarCertificado/{{ certificado.id }}"
+                        class="btn btn-outline-danger"
+                        onclick="return confirm('¿Desea eliminar este certificado?')"
+                        title="Eliminar">
+
+                            <i class="bi bi-trash"></i>
+
+                        </a>
+
+                        {% endif %}
+                    <a href="/reporteCertificado/{{ certificado.id }}"
+                        onclick="window.open(this.href, 'Certificado', 'width=1000,height=900,resizable=yes,scrollbars=yes'); return false;"
+                        class="btn btn-outline-primary"
+                        title="Imprimir Certificado">
+                        <i class="bi bi-printer"></i>
+                    </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -25,6 +25,13 @@ urlpatterns = [
     path('editarCurso/<id>/', views.editarCurso),
     path('procesarActualizacionCurso/', views.procesarActualizacionCurso),
     path('reporteCursos/', views.reporteCursos),
-
+    path('nuevoCertificado/', views.nuevoCertificado),
+    path('guardarCertificado/', views.guardarCertificado),
+    path('listadoCertificados/', views.listadoCertificados),
+    path('editarCertificado/<id>/', views.editarCertificado),
+    path('procesarActualizacionCertificado/', views.procesarActualizacionCertificado),
+    path('eliminarCertificado/<id>/', views.eliminarCertificado),
+    path('reporteCertificados/', views.reporteCertificados),
+    path('reporteCertificado/<int:id>/', views.reporteCertificado),
 
 ]

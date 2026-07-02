@@ -1,0 +1,147 @@
+{% extends "./plantillaPrincipal.html" %}
+{% block contenido %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+
+        <div class="col-md-6">
+
+            <br>
+            <h1><b>Editar Certificado</b></h1>
+            <hr>
+
+            <form id="form_editar_certificado"
+                  action="/procesarActualizacionCertificado/"
+                  method="post">
+
+                {% csrf_token %}
+
+                <input type="hidden" name="id" value="{{ certificado.id }}">
+
+                <b>Técnico:</b>
+                <br>
+
+                <select required class="form-control" name="tecnico">
+
+                    {% for tecnico in tecnicos %}
+
+                        <option value="{{ tecnico.id }}"
+                        {% if tecnico.id == certificado.tecnico.id %}
+                            selected
+                        {% endif %}>
+                            {{ tecnico.nombre }} {{ tecnico.apellido }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <br>
+
+                <b>Curso:</b>
+                <br>
+
+                <select required class="form-control" name="curso">
+
+                    {% for curso in cursos %}
+
+                        <option value="{{ curso.id }}"
+                        {% if curso.id == certificado.curso.id %}
+                            selected
+                        {% endif %}>
+                            {{ curso.nombre }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <br>
+
+                <b>Estado del Curso:</b>
+                <br>
+
+                <select required class="form-control" name="aprobacion">
+
+                    <option value="Aprobado"
+                    {% if certificado.aprobacion == "Aprobado" %}
+                        selected
+                    {% endif %}>
+                        Aprobado
+                    </option>
+
+                    <option value="Reprobado"
+                    {% if certificado.aprobacion == "Reprobado" %}
+                        selected
+                    {% endif %}>
+                        Reprobado
+                    </option>
+
+                </select>
+
+                <br><br>
+
+                <button class="btn btn-warning" type="submit">
+                    <i class="bi bi-pencil-square"></i>
+                    Actualizar
+                </button>
+
+                o
+
+                <a href="/listadoCertificados/" class="btn btn-danger">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(document).ready(function(){
+
+    $("#form_editar_certificado").validate({
+
+        rules:{
+
+            tecnico:{
+                required:true
+            },
+
+            curso:{
+                required:true
+            },
+
+            aprobacion:{
+                required:true
+            }
+
+        },
+
+        messages:{
+
+            tecnico:{
+                required:"Seleccione un técnico."
+            },
+
+            curso:{
+                required:"Seleccione un curso."
+            },
+
+            aprobacion:{
+                required:"Seleccione el estado del curso."
+            }
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

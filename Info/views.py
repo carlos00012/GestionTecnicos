@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Tecnico, Cursos
+from .models import Tecnico, Cursos, Certificado
 from django.contrib import messages
 import os
 
@@ -223,3 +223,132 @@ def cerrarSesion(request):
 
     return redirect('/login/')
 
+#--------------------- PARTE DEL CERTIFICADO -----------------------------
+@login_required
+def nuevoCertificado(request):
+
+    tecnicos = Tecnico.objects.all()
+    cursos = Cursos.objects.all()
+
+    return render(
+        request,
+        'nuevoCertificado.html',
+        {
+            'tecnicos': tecnicos,
+            'cursos': cursos
+        }
+    )
+
+@login_required
+def guardarCertificado(request):
+
+    tecnico = Tecnico.objects.get(
+        id=request.POST["tecnico"]
+    )
+
+    curso = Cursos.objects.get(
+        id=request.POST["curso"]
+    )
+
+    aprobacion = request.POST["aprobacion"]
+
+    Certificado.objects.create(
+        tecnico=tecnico,
+        curso=curso,
+        aprobacion=aprobacion
+    )
+
+    messages.success(request,"Certificado registrado correctamente")
+
+    return redirect('/listadoCertificados/')
+
+@login_required
+def listadoCertificados(request):
+
+    certificados = Certificado.objects.all()
+
+    return render(
+        request,
+        'listadoCertificados.html',
+        {
+            'certificados': certificados
+        }
+    )
+
+@login_required
+def eliminarCertificado(request,id):
+
+    certificado = Certificado.objects.get(id=id)
+
+    certificado.delete()
+
+    messages.success(request,"Certificado eliminado correctamente")
+
+    return redirect('/listadoCertificados/')
+
+@login_required
+def editarCertificado(request,id):
+
+    certificado = Certificado.objects.get(id=id)
+
+    tecnicos = Tecnico.objects.all()
+    cursos = Cursos.objects.all()
+
+    return render(
+        request,
+        'editarCertificado.html',
+        {
+            'certificado': certificado,
+            'tecnicos': tecnicos,
+            'cursos': cursos
+        }
+    )
+
+@login_required
+def procesarActualizacionCertificado(request):
+
+    certificado = Certificado.objects.get(
+        id=request.POST["id"]
+    )
+
+    certificado.tecnico = Tecnico.objects.get(
+        id=request.POST["tecnico"]
+    )
+
+    certificado.curso = Cursos.objects.get(
+        id=request.POST["curso"]
+    )
+
+    certificado.aprobacion = request.POST["aprobacion"]
+
+    certificado.save()
+
+    messages.success(request,"Certificado actualizado correctamente")
+
+    return redirect('/listadoCertificados/')
+
+@login_required
+def reporteCertificados(request):
+
+    certificados = Certificado.objects.all()
+
+    return render(
+        request,
+        'reporteCertificados.html',
+        {
+            'certificados': certificados
+        }
+    )
+
+@login_required
+def reporteCertificado(request, id):
+
+    certificado = Certificado.objects.get(id=id)
+
+    return render(
+        request,
+        "reporteCertificado.html",
+        {
+            'certificado': certificado
+        }
+    )

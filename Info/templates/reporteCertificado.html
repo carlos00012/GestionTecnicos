@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado #{{ certificado.id }}</title>
+
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+
+    <style>
+        html, body {
+            background: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .certificado {
+            width: 95%;
+            max-width: 1100px;
+            /* Reducimos la altura para que entre sí o sí en una sola página */
+            height: 580px; 
+            border: 12px solid #b8860b;
+            padding: 20px 40px;
+            margin: 10px auto;
+            box-sizing: border-box;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribuye el contenido uniformemente sin usar <br> */
+        }
+        .logo {
+            height: 70px;
+            max-width: 140px;
+            object-fit: contain;
+        }
+        .foto {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #999;
+            object-fit: cover;
+            margin: 5px 0;
+        }
+        .titulo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1d3557;
+            margin: 0;
+        }
+        .nombre {
+            font-size: 30px;
+            font-weight: bold;
+            color: #0d6efd;
+            margin: 5px 0;
+        }
+        .texto {
+            font-size: 16px;
+            color: #333;
+            margin: 2px 0;
+        }
+        .curso-titulo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1d3557;
+            margin: 5px 0;
+        }
+        .firma {
+            margin-top: 20px;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            html, body {
+                width: 100%;
+                height: 100%;
+            }
+            .certificado {
+                border: 12px solid #b8860b !important;
+                page-break-inside: avoid;
+            }
+        }
+
+        @page {
+            size: landscape !important;
+            margin: 0.3cm;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="certificado">
+        
+        <!-- ENCABEZADO -->
+        <table width="100%">
+            <tr>
+                <td width="25%">
+                    <img src="{% static 'assets/img/logoutc.png' %}" class="logo">
+                </td>
+                <td align="center" width="50%">
+                    <div id="qrcode_box" style="display: inline-block; min-width: 100px; min-height: 100px;"></div>
+                </td>
+                <td align="right" width="25%">
+                    <img src="{% static 'assets/img/logosistemas.jpeg' %}" class="logo">
+                </td>
+            </tr>
+        </table>
+
+        <!-- CUERPO CENTRAL -->
+        <center>
+            <div class="titulo">CERTIFICADO DE APROBACIÓN</div>
+            <hr style="border: 2px solid #b8860b; width: 60%; margin: 5px 0;">
+
+            {% if certificado.tecnico.foto %}
+                <img src="{{ certificado.tecnico.foto.url }}" class="foto">
+            {% endif %}
+            
+            <div class="texto">Se certifica que</div>
+            <div class="nombre">{{ certificado.tecnico.nombre }} {{ certificado.tecnico.apellido }}</div>
+            <div class="texto">ha participado satisfactoriamente en el curso</div>
+            <div class="curso-titulo">{{ certificado.curso.nombre }}</div>
+            
+            <div class="texto">
+                Realizado desde <b>{{ certificado.curso.fecha_inicio }}</b> hasta <b>{{ certificado.curso.fecha_fin }}</b>
+            </div>
+
+            {% if certificado.aprobacion == "Aprobado" %}
+                <h2 class="fw-bold" style="color:green; margin: 5px 0;">APROBADO</h2>
+            {% else %}
+                <h2 class="fw-bold" style="color:red; margin: 5px 0;">REPROBADO</h2>
+            {% endif %}
+        </center>
+
+        <!-- SECCIÓN FIRMAS -->
+        <div class="firma">
+            <table width="100%">
+                <br>
+                <tr>
+                    <td align="center" width="50%" style="font-size: 15px;">
+                        _________________________<br><b>Coordinador</b>
+                    </td>
+                    <td align="center" width="50%" style="font-size: 15px;">
+                        _________________________<br><b>Director</b>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="text-center my-2 no-print">
+    <button class="btn btn-dark" onclick="window.print()">
+        Imprimir Certificado
+    </button>
+</div>
+
+<script src="{% static 'assets/vendor/jquery/qrcode.min.js' %}"></script>
+
+<script>
+    try {
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(document.getElementById("qrcode_box"), {
+                text: "Certificado #{{ certificado.id }}\n" +
+                      "Técnico: {{ certificado.tecnico.nombre }} {{ certificado.tecnico.apellido }}\n" +
+                      "Curso: {{ certificado.curso.nombre }}\n" +
+                      "Estado: {{ certificado.aprobacion }}\n" +
+                      "Fecha Inicio: {{ certificado.curso.fecha_inicio }}\n" +
+                      "Fecha Fin: {{ certificado.curso.fecha_fin }}",
+                width: 100,
+                height: 100,
+                colorDark: "#000080",
+                colorLight: "#ffffff"
+            });
+        }
+    } catch (e) {
+        console.log("Error QR local:", e);
+    }
+
+    setTimeout(function() {
+        window.print();
+    }, 1000);
+</script>
+
+</body>
+</html>
