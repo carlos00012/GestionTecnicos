@@ -33,5 +33,6 @@ urlpatterns = [
     path('eliminarCertificado/<id>/', views.eliminarCertificado),
     path('reporteCertificados/', views.reporteCertificados),
     path('reporteCertificado/<int:id>/', views.reporteCertificado),
+    path('enviarCertificado/<int:id>/',views.enviarCertificado),
 
 ]

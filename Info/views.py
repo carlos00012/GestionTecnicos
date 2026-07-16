@@ -7,6 +7,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Perfil
 
+from django.core.mail import EmailMessage
+from django.conf import settings
+from playwright.sync_api import sync_playwright
+import tempfile
+
 
 
 # Ruta de inicio
@@ -30,6 +35,7 @@ def guardarTecnico(request):
     apellidoNuevoTecnico = request.POST["apellido"]
     telefonoNuevoTecnico = request.POST["telefono"]
     especialidadNuevoTecnico = request.POST["especialidad"]
+    correoNuevoTecnico = request.POST.get('correo', '')
     # Capturando el archivo de name=foto que se creo en nuevo tecnico
     fotoNuevoTecnico = request.FILES.get('foto')
     
@@ -39,6 +45,7 @@ def guardarTecnico(request):
         apellido=apellidoNuevoTecnico,
         telefono=telefonoNuevoTecnico,
         especialidad=especialidadNuevoTecnico,
+        correo=correoNuevoTecnico,
         foto=fotoNuevoTecnico
     )
     messages.success(request, "Técnico guardado exitosamente")
@@ -95,6 +102,7 @@ def procesarActualizacionTecnico(request):
     tecnicoEditar.apellido = apellido
     tecnicoEditar.telefono = telefono
     tecnicoEditar.especialidad = especialidad
+    tecnicoEditar.correo = request.POST.get('correo', '')  # Actualizar el correo si se proporciona
     
     # Si suben foto nueva, eliminar la anterior
     nueva_foto = request.FILES.get('foto')
@@ -340,7 +348,7 @@ def reporteCertificados(request):
         }
     )
 
-@login_required
+
 def reporteCertificado(request, id):
 
     certificado = Certificado.objects.get(id=id)
@@ -352,3 +360,77 @@ def reporteCertificado(request, id):
             'certificado': certificado
         }
     )
+
+
+
+@login_required
+def enviarCertificado(request,id):
+
+    certificado=Certificado.objects.get(id=id)
+
+    archivo=tempfile.NamedTemporaryFile(
+        suffix=".pdf",
+        delete=False
+    )
+
+    archivo.close()
+
+    url=request.build_absolute_uri(
+        f"/reporteCertificado/{id}/"
+    )
+
+    generar_pdf(url,archivo.name)
+
+    correo=EmailMessage(
+
+        subject="Certificado del Curso",
+
+        body=f"""
+Estimado(a) {certificado.tecnico.nombre}:
+
+Adjunto encontrará su certificado correspondiente al curso:
+
+{certificado.curso.nombre}
+
+Saludos cordiales.
+""",
+
+        from_email=settings.EMAIL_HOST_USER,
+
+        to=[certificado.tecnico.correo]
+
+    )
+
+    correo.attach_file(archivo.name)
+
+    correo.send()
+
+    os.remove(archivo.name)
+
+    messages.success(
+        request,
+        "Certificado enviado correctamente."
+    )
+
+    return redirect("/listadoCertificados/")
+
+def generar_pdf(url, archivo):
+
+    with sync_playwright() as p:
+
+        navegador = p.chromium.launch(headless=True)
+
+        pagina = navegador.new_page()
+
+        pagina.goto(url)
+
+        pagina.wait_for_timeout(3000)
+
+        pagina.pdf(
+            path=archivo,
+            format="A4",
+            landscape=True,
+            print_background=True
+        )
+
+        navegador.close()

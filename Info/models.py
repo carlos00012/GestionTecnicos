@@ -8,6 +8,7 @@ class Tecnico(models.Model):
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
     telefono = models.CharField(max_length=20)
+    correo = models.EmailField(blank=True, null=True)
     especialidad = models.CharField(max_length=100)
     foto = models.FileField(upload_to='fotos_tecnicos', blank=True, null=True)
 

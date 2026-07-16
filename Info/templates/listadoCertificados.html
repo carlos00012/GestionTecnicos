@@ -133,6 +133,21 @@
 
                     {% endif %}
 
+                    {% if certificado.aprobacion == "Aprobado" %}
+                    <a href="/enviarCertificado/{{ certificado.id }}"
+                    class="btn btn-outline-success"
+                    title="Enviar por correo">
+
+                    <i class="bi bi-envelope-fill"></i>
+                    </a>
+                    {% else %}
+                    <a href="N/A" class="btn btn-outline-secondary disabled" title="Enviar Certificado">
+                        <i class="bi bi-envelope-fill"></i>
+                    </a>
+
+                    {% endif %}
+
+
                     </td>
 
                 </tr>
