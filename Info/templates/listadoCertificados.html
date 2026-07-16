@@ -118,12 +118,20 @@
                         </a>
 
                         {% endif %}
+
+                    {% if certificado.aprobacion == "Aprobado" %}
                     <a href="/reporteCertificado/{{ certificado.id }}"
                         onclick="window.open(this.href, 'Certificado', 'width=1000,height=900,resizable=yes,scrollbars=yes'); return false;"
                         class="btn btn-outline-primary"
                         title="Imprimir Certificado">
                         <i class="bi bi-printer"></i>
                     </a>
+                    {% else %}
+                    <a href="N/A" class="btn btn-outline-secondary disabled" title="Imprimir Certificado">
+                        <i class="bi bi-printer"></i>
+                    </a>
+
+                    {% endif %}
 
                     </td>
 
